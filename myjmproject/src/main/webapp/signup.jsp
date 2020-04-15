@@ -6,10 +6,10 @@
     <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="form-style-2">
-    <div class="form-style-2-heading">
-        Please Sign Up!
-    </div>
+<div class="form-style-8">
+
+    <div class="form-style-8 header"> Please Sign Up!</div>
+
     <form method="post" action="/myjmproject_war/signUp">
         <label for="name">User name
             <input class="input-field" type="text" id="name" name="name">

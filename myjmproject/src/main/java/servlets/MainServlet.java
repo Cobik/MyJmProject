@@ -34,6 +34,20 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        Long id = Long.parseLong(req.getParameter("id"));
+
+        String name = req.getParameter("name");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+
+        User user = new User(name,username,password);
+
+        try {
+            userService.updateUser(user,id);
+            resp.sendRedirect("mainpage.jsp");
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

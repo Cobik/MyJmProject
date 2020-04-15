@@ -14,10 +14,10 @@
     <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="form-style-2">
-    <div class="form-style-2-heading">
-        Please Sign In!
-    </div>
+<div class="form-style-8">
+
+    <div class="form-style-8 header"> Please Sign In!</div>
+
     <form method="post" action="/myjmproject_war/login">
         <label for="username">UserName
             <input class="input-field" type="text" id="username" name="username">

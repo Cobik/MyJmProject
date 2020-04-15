@@ -13,8 +13,6 @@ import java.util.List;
 public class UserService {
 
 
-
-
     private static Connection getMysqlConnection() {
         try {
             DriverManager.registerDriver((Driver) Class.forName("com.mysql.jdbc.Driver").newInstance());
@@ -38,8 +36,19 @@ public class UserService {
         }
     }
 
+
     private static UserDao getUserDao(){
         return new UserDao(getMysqlConnection());
+    }
+
+    public Long getUserIdByUsername(String username)  {
+        UserDao dao = getUserDao();
+        try {
+            return dao.getUserIdByUsername(username);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<User> getAllUsers() throws SQLException {
@@ -59,6 +68,11 @@ public class UserService {
         }
     }
 
+    public boolean deleteUser(Long id)throws SQLException{
+        UserDao dao = getUserDao();
+        return dao.deleteUser(id);
+    }
+
     public boolean signInUser(User user) throws SQLException {
         UserDao dao = getUserDao();
         return dao.validateUser(user);
@@ -67,6 +81,21 @@ public class UserService {
     public  boolean validateUser(User user) throws SQLException {
         UserDao dao = getUserDao();
         return dao.validateUser(user);
+    }
+
+    public boolean updateUser(User user,Long id) throws SQLException {
+        UserDao dao = getUserDao();
+        return dao.updateUser(user,id);
+    }
+
+    public User getUserById(Long id){
+        UserDao dao = getUserDao();
+        try {
+            return dao.getUserById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void cleanUp() throws DBException {
