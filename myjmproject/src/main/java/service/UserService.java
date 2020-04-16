@@ -25,7 +25,7 @@ public class UserService {
                     append("3306/").                //port
                     append("mydbtest?").          //db name
                     append("user=root&").          //login
-                    append("password=ckmc_labirint");       //password
+                    append("password=root");       //password
 
             System.out.println("URL: " + url + "\n");
 
