@@ -1,7 +1,14 @@
 servlets/SignUpServlet.class
+dao/UserHibernateDAO.class
+dao/UserJdbcDAO.class
+dao/UserDaoFactory.class
+servlets/LogoutServlet.class
+servlets/RoleFilterServlet.class
 exception/DBException.class
 servlets/MainServlet.class
 model/User.class
 service/UserService.class
 dao/UserDao.class
+servlets/EditServlet.class
 servlets/SignInServlet.class
+utils/DBHelper.class
