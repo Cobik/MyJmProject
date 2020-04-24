@@ -1,5 +1,6 @@
 <%@ page import="service.UserService" %>
-<%@ page import="java.sql.SQLException" %><%--
+<%@ page import="model.User" %>
+<%--
   Created by IntelliJ IDEA.
   User: javidanhajizada
   Date: 4/13/20
@@ -8,18 +9,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserService userService = new UserService();
-    String id = request.getParameter("d");
+    String id = request.getParameter("id");
+    User user = UserService.getInstance().getUserById(Long.parseLong(id));
 
-    try {
-        if (userService.deleteUser(Long.parseLong(id))){
-            response.sendRedirect("/myjmproject_war/main");
-            response.setStatus(HttpServletResponse.SC_OK);
-        } else {
-            response.getWriter().println("Have a problem");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
+    if (UserService.getInstance().deleteUser(Long.parseLong(id))){
+        response.sendRedirect("/admin/main");
+        response.setStatus(HttpServletResponse.SC_OK);
+    } else {
+        response.getWriter().println("Have a problem");
     }
 
 %>

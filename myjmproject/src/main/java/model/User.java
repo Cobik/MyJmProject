@@ -1,25 +1,48 @@
 package model;
 
 import java.util.Objects;
+import javax.persistence.*;
 
+
+@Entity
+@Table(name = "user")
 public class User {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "role")
+    private String role;
 
-    public User(long id, String name, String username, String password) {
+    public User() {
+
+    }
+
+
+    public User(long id, String name, String username, String password, String role) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
-    public User(String name, String username, String password) {
+    public User(String name, String username, String password, String role) {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public User(String username, String password) {
@@ -57,6 +80,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

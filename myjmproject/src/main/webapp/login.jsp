@@ -5,7 +5,6 @@
   Time: 19:00
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
@@ -18,7 +17,7 @@
 
     <div class="form-style-8 header"> Please Sign In!</div>
 
-    <form method="post" action="/myjmproject_war/login">
+    <form method="post" action="/login">
         <label for="username">UserName
             <input class="input-field" type="text" id="username" name="username">
         </label>

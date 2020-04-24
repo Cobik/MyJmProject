@@ -14,8 +14,7 @@
 </head>
 <body class="container-table100">
 <%
-    UserService userService = new UserService();
-    List<User> users = userService.getAllUsers();
+    List<User> users = UserService.getInstance().getAllUsers();
 %>
 
 
@@ -35,16 +34,20 @@
         <td class="column4"><%=user.getPassword()%></td>
 
         <td class="column5">
-            <a href="edit.jsp?d=<%=user.getId()%>" class="button">Edit</a>
+            <a href="/admin/edit?id=<%=user.getId()%> " methods="get" class="button">Edit</a>
         </td>
         <td class="column6">
-            <a href="delete.jsp?d=<%=user.getId()%>" class="buttonRed">Delete</a>
+            <a href="/delete.jsp?id=<%=user.getId()%>" class="buttonRed">Delete</a>
         </td>
     </tr>
     <%}%>
 
 
 </table>
+
+    <a href="/admin/signUp" class="button">Add</a>
+    <a href="/logout"  methods="get" class="buttonRed">Exit</a>
+
 </body>
 </html>
 
