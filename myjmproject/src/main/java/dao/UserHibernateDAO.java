@@ -5,6 +5,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import utils.DBHelper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,17 +13,32 @@ import java.util.List;
 
 public class UserHibernateDAO implements UserDao {
     private Session session;
+    private static UserHibernateDAO instance;
 
-    public UserHibernateDAO(Session session){
-        this.session = session;
+    private UserHibernateDAO(){
+        session = DBHelper.getSessionFactory().openSession();
     }
 
+    public static UserHibernateDAO getInstance() {
+        if (instance == null) {
+            instance = new UserHibernateDAO();
+        }
+        return instance;
+    }
 
 
     @Override
     public void addUser(User user)  {
-        session.save(user);
-        session.close();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.save(user);
+            session.close();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -55,25 +71,38 @@ public class UserHibernateDAO implements UserDao {
     @Override
     public boolean deleteUser(Long id)  {
         Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("delete User where id = :id");
-        query.setString("id", String.valueOf(id));
-        query.executeUpdate();
-        transaction.commit();
-        return true;
+        try {
+            Query query = session.createQuery("delete User where id = :id");
+            query.setString("id", String.valueOf(id));
+            query.executeUpdate();
+            transaction.commit();
+            return true;
+        } catch (Exception e){
+            transaction.rollback();
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     @Override
     public boolean updateUser(User user,Long id) {
         Transaction transaction = session.beginTransaction();
-       Query query = session.createQuery("UPDATE User  SET name =:name, username =:username, password=:password" +
-               " where id =:id");
-       query.setString("name",user.getName());
-       query.setString("username",user.getUsername());
-       query.setString("password",user.getPassword());
-       query.setString("id", String.valueOf(id));
-       query.executeUpdate();
-       transaction.commit();
-       return true;
+       try {
+           Query query = session.createQuery("UPDATE User  SET name =:name, username =:username, password=:password" +
+                   " where id =:id");
+           query.setString("name",user.getName());
+           query.setString("username",user.getUsername());
+           query.setString("password",user.getPassword());
+           query.setString("id", String.valueOf(id));
+           query.executeUpdate();
+           transaction.commit();
+           return true;
+       } catch (Exception e){
+           transaction.rollback();
+           e.printStackTrace();
+           return false;
+       }
     }
 
     @Override

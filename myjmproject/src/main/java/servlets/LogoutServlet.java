@@ -14,8 +14,13 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null) {
+            resp.setHeader("Cache-Control","no-cache"); //Forces caches to obtain a new copy of the page from the origin server
+            resp.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
+            resp.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
+            resp.setHeader("Pragma","no-cache");
             session.invalidate();
         }
+
         resp.sendRedirect("/login");
     }
 }

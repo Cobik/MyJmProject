@@ -1,10 +1,10 @@
 package servlets;
 
 import model.User;
+import service.UserServiceImpl;
 
-import service.UserService;
-
-import javax.servlet.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +18,14 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getServletContext().getRequestDispatcher("/login.jsp");
-        requestDispatcher.forward(req, resp);
+        HttpSession session = req.getSession(false);
+
+        if (session == null) {
+            RequestDispatcher requestDispatcher = req.getServletContext().getRequestDispatcher("/login.jsp");
+            requestDispatcher.forward(req, resp);
+        } else {
+            resp.sendRedirect("/admin/main");
+        }
     }
 
     @Override
@@ -29,15 +35,15 @@ public class SignInServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User user = new User(username, password);
 
-        String role = UserService.getInstance().getRoleByUsername(username);
+        String role = UserServiceImpl.getInstance().getRoleByUsername(username);
 
         try {
-            if (UserService.getInstance().signInUser(user)) {
+            if (UserServiceImpl.getInstance().signInUser(user)) {
                 resp.sendRedirect("/admin/main");
                 session.setAttribute("role", role);
                 session.setAttribute("username", username);
                 resp.setStatus(HttpServletResponse.SC_OK);
-            } else if (UserService.getInstance().validateUser(user)) {
+            } else if (UserServiceImpl.getInstance().validateUser(user)) {
                 resp.getWriter().println("Wrong username or password");
             } else {
                 resp.sendRedirect("signup.jsp");

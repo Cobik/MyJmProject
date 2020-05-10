@@ -1,8 +1,8 @@
 package servlets;
 
 import model.User;
+import service.UserServiceImpl;
 
-import service.UserService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,11 +34,11 @@ public class SignUpServlet extends HttpServlet {
         User user = new User(name, username, password, role);
 
         try {
-            if (UserService.getInstance().validateUser(user)) {
+            if (UserServiceImpl.getInstance().validateUser(user)) {
                 resp.sendRedirect("login.jsp");
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {
-                UserService.getInstance().addUser(user);
+                UserServiceImpl.getInstance().addUser(user);
 
                 session.setAttribute("role", role);
                 session.setAttribute("username",username);

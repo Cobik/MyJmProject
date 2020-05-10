@@ -2,10 +2,10 @@ package servlets;
 
 import exception.DBException;
 import model.User;
+import service.UserServiceImpl;
 
-import service.UserService;
-
-import javax.servlet.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +18,9 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         try {
-            UserService.getInstance().createTable();
-            List<User> userList = UserService.getInstance().getAllUsers();
+            UserServiceImpl.getInstance().createTable();
+            List<User> userList = UserServiceImpl.getInstance().getAllUsers();
             req.setAttribute("usersFromServer", userList);
             RequestDispatcher dispatcher = req.getServletContext().getRequestDispatcher("/mainpage.jsp");
             dispatcher.forward(req, resp);

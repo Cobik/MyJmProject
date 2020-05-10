@@ -1,7 +1,7 @@
 package servlets;
 
 import model.User;
-import service.UserService;
+import service.UserServiceImpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,12 +18,10 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
-        User user = UserService.getInstance().getUserById(id);
+        User user = UserServiceImpl.getInstance().getUserById(id);
 
-        req.setAttribute("name", user.getName());
-        req.setAttribute("username", user.getUsername());
-        req.setAttribute("password", user.getPassword());
-        req.setAttribute("role", user.getRole());
+        req.setAttribute("user",user);
+        req.setAttribute("id",id);
         RequestDispatcher requestDispatcher = req.getServletContext().getRequestDispatcher("/edit.jsp");
         requestDispatcher.forward(req, resp);
     }
@@ -40,7 +38,7 @@ public class EditServlet extends HttpServlet {
         User user = new User(name, username, password, role);
 
         try {
-            UserService.getInstance().updateUser(user, id);
+            UserServiceImpl.getInstance().updateUser(user, id);
             resp.sendRedirect("/admin/main");
 
             resp.setStatus(HttpServletResponse.SC_OK);
