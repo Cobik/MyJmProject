@@ -3,19 +3,16 @@ package dao;
 import model.User;
 import utils.DBHelper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserJdbcDAO implements UserDao{
+public class UserJdbcDAO implements UserDao {
     private Connection connection;
     private static UserJdbcDAO instance;
 
     private UserJdbcDAO() {
-       connection = DBHelper.getConnection();
+        connection = DBHelper.getConnection();
     }
 
     public static UserJdbcDAO getInstance() {
@@ -27,38 +24,40 @@ public class UserJdbcDAO implements UserDao{
 
 
     public void addUser(User user) throws SQLException {
-        String name = user.getName();
-        String username = user.getUsername();
-        String password = user.getPassword();
-        String role = user.getRole();
         PreparedStatement preparedStatement = connection.prepareStatement("insert into users(name,username,password,role) " +
-                "values('" + name + "','" + username + "','" + password +"','"+ role + "') ");
+                "values(?,?,?,?) ");
 
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getUsername());
+        preparedStatement.setString(3, user.getPassword());
+        preparedStatement.setString(4, user.getRole());
         preparedStatement.execute();
         preparedStatement.close();
     }
 
     public Long getUserIdByUsername(String username) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("select id from users where username='"+username+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("select id from users where username = ?");
+        preparedStatement.setString(1, username);
         preparedStatement.execute();
+
         ResultSet resultSet = preparedStatement.getResultSet();
-        Long id = null;
-        while (resultSet.next()){
-           id = Long.parseLong(resultSet.getString(1));
-        }
+        resultSet.next();
+        Long id = Long.parseLong(resultSet.getString(1));
+
         preparedStatement.close();
         resultSet.close();
         return id;
     }
 
     public String getRoleByUsername(String username) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("select role from users where username='"+username+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("select role from users where username= ?");
+        preparedStatement.setString(1, username);
         preparedStatement.execute();
+
         ResultSet resultSet = preparedStatement.getResultSet();
-        String role = "";
-        while (resultSet.next()){
-            role = resultSet.getString(1);
-        }
+        resultSet.next();
+        String role = resultSet.getString(1);
+
         preparedStatement.close();
         resultSet.close();
 
@@ -66,29 +65,35 @@ public class UserJdbcDAO implements UserDao{
     }
 
     public User getUserById(Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id='"+id+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ?");
+        preparedStatement.setLong(1, id);
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        String name = "",username = "",password ="", role = "";
-        while (resultSet.next()){
+        String name = "";
+        String username = "";
+        String password = "";
+        String role = "";
+        while (resultSet.next()) {
             name = resultSet.getString(2);
             username = resultSet.getString(3);
             password = resultSet.getString(4);
             role = resultSet.getString(5);
         }
-        User user = new User(name,username,password,role);
+        User user = new User(name, username, password, role);
         preparedStatement.close();
         resultSet.close();
         return user;
     }
 
     public boolean validateUser(User user) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users" +
-                " where username = '"+user.getUsername()+"' and password ='"+user.getPassword()+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where username = ? and password = ?");
+        preparedStatement.setString(1, user.getUsername());
+        preparedStatement.setString(2, user.getPassword());
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        String username = "", password = "";
-        while (resultSet.next()){
+        String username = "";
+        String password = "";
+        while (resultSet.next()) {
             username = resultSet.getString(3);
             password = resultSet.getString(4);
         }
@@ -98,41 +103,46 @@ public class UserJdbcDAO implements UserDao{
     }
 
     public boolean validateUserByUsername(User user) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users where username = '"+user.getUsername()+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where username = ?");
+        preparedStatement.setString(1, user.getUsername());
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        String username = "";
-        while (resultSet.next()){
-            username = resultSet.getString(3);
-        }
+        resultSet.next();
+
+        String username = resultSet.getString(3);
+
         preparedStatement.close();
         resultSet.close();
         return user.getUsername().equals(username);
     }
 
-    public boolean deleteUser(Long id)  {
+    public boolean deleteUser(Long id) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE  FROM users where  id='"+id+"'");
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from users where  id = ?");
+            preparedStatement.setLong(1, id);
             preparedStatement.execute();
             preparedStatement.close();
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public boolean updateUser(User user, Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("update users set name='"+user.getName()+"'" +
-                ", username='"+user.getUsername()+"', password = '"+user.getPassword()+"' where id='"+id+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("update users set name = ?, username = ?, password = ? where id = ? ");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getUsername());
+        preparedStatement.setString(3, user.getPassword());
+        preparedStatement.setLong(4, user.getId());
         preparedStatement.execute();
         preparedStatement.close();
-            return true;
+        return true;
     }
 
 
     public List<User> getAllUsers() throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users");
         preparedStatement.execute();
         ResultSet result = preparedStatement.getResultSet();
         List<User> list = new ArrayList<>();
@@ -149,6 +159,18 @@ public class UserJdbcDAO implements UserDao{
         preparedStatement.close();
         result.close();
         return list;
+    }
+
+    public void createTable() throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.execute("create table if not exists users (id bigint auto_increment, name varchar(256),username varchar(256), password varchar(256), role varchar(256), primary key (id))");
+        stmt.close();
+    }
+
+    public void dropTable() throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("drop table if exists users");
+        stmt.close();
     }
 
 

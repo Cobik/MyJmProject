@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBHelper {
     private static DBHelper instance;
@@ -29,15 +30,17 @@ public class DBHelper {
     public static Configuration getConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
+        Properties property = PropertyReader.getProperties("config.properties");
 
 
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/mydbtest");
-        configuration.setProperty("hibernate.connection.username", "root");
-        configuration.setProperty("hibernate.connection.password", "ckmc_labirint");
-        configuration.setProperty("hibernate.show_sql", "true");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+        configuration.setProperty("hibernate.dialect", property.getProperty("hibernate.dialect"));
+        configuration.setProperty("hibernate.connection.driver_class", property.getProperty("hibernate.connection.driver_class"));
+        configuration.setProperty("hibernate.connection.url", property.getProperty("hibernate.connection.url"));
+        configuration.setProperty("hibernate.connection.username", property.getProperty("hibernate.connection.username"));
+        configuration.setProperty("hibernate.connection.password", property.getProperty("hibernate.connection.password"));
+        configuration.setProperty("hibernate.show_sql", property.getProperty("hibernate.show_sql"));
+        configuration.setProperty("hibernate.current_session_context_class",property.getProperty("hibernate.current_session_context_class"));
+      //  configuration.setProperty("hibernate.hbm2ddl.auto", "create");
         return configuration;
     }
 

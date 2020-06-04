@@ -2,16 +2,17 @@ package service;
 
 import dao.UserDao;
 import dao.UserDaoFactory;
+import dao.UserJdbcDAO;
 import exception.DBException;
 import model.User;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
     private static UserServiceImpl instance;
 
-    UserDao daoFactory = new UserDaoFactory().UserDaoFactoryImpl();
+    private UserDao daoFactory = new UserDaoFactory().userDaoFactoryImpl();
 
     private UserServiceImpl() {
 
@@ -24,15 +25,6 @@ public class UserServiceImpl implements UserService {
         return instance;
     }
 
-    public Long getUserIdByUsername(String username) {
-        try {
-            return daoFactory.getUserIdByUsername(username);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public List<User> getAllUsers() {
         try {
@@ -87,17 +79,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void cleanUp() throws DBException {
-        try {
-            daoFactory.dropTable();
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
-    }
-
     public void createTable() throws DBException {
         try {
-            daoFactory.createTable();
+            UserJdbcDAO.getInstance().createTable();
         } catch (SQLException e) {
             throw new DBException(e);
         }

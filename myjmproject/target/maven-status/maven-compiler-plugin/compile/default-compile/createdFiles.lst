@@ -3,11 +3,13 @@ dao/UserHibernateDAO.class
 dao/UserJdbcDAO.class
 dao/UserDaoFactory.class
 servlets/LogoutServlet.class
-servlets/RoleFilterServlet.class
+servlets/DeleteServlet.class
 exception/DBException.class
+utils/PropertyReader.class
+service/UserServiceImpl.class
 servlets/MainServlet.class
 model/User.class
-service/UserService.class
+servlets/UserServlet.class
 dao/UserDao.class
 servlets/EditServlet.class
 servlets/SignInServlet.class
