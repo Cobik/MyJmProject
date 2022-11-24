@@ -13,7 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <mysql.mysql-connector-java.version>8.0.15</mysql.mysql-connector-java.version>
-        <org.hibernate.hibernate-core.version>4.3.10.Final</org.hibernate.hibernate-core.version>
+        <org.hibernate.hibernate-core.version>5.3.20.Final</org.hibernate.hibernate-core.version>
     </properties>
 
 
